@@ -1,0 +1,20 @@
+storageClassName: standard
+wis2node: fr-meteofrance
+mqtt_sub_broker: mqtt://wis2nc.meteo.fr:1883
+mqtt_sub_username: wis2box
+mqtt_sub_password: 
+mqtt_sub_topic: origin/a/wis2/fr-meteofrance/#
+mqtt_monit_topic: monitor
+centre_id: fr-meteofrance
+msg_check_option: verify
+topic_check_option: verify
+metadata_check_option: verify
+gdc_url: https://api.weather.gc.ca/collections/wis2-discovery-metadata/items?lang=en&f=json&q=
+schema_url: https://raw.githubusercontent.com/golfvert/wis2-topic-hierarchy/main/wis2-notification-message.json
+topic_url: http://stub/topic.md5
+ingress:
+  ingressClassName: nginx
+  hostname: localhost
+  path: /
+  pathType: ImplementationSpecific
+  annotations: 

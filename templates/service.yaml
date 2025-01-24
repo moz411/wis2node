@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name }}
+  name: {{ .Values.wis2node }}
+spec:
+  ports:
+  - name: {{ .Values.wis2node }}
+    port: 80
+    protocol: TCP
+    targetPort: 1880
+  selector:
+    app: {{ .Values.wis2node }}
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: redis

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.wis2node }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ .Values.wis2node }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.wis2node }}
+    spec:
+      containers:
+      - name: wis2gb
+        image: golfvert/wis2gb:4.0.4
+        ports:
+        - containerPort: 1880
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MQTT_PUB_BROKER
+          value: {{ .Values.mqtt_sub_broker }}
+        - name: MQTT_PUB_USERNAME
+          value: {{ .Values.mqtt_pub_username }}
+        - name: MQTT_PUB_PASSWORD
+          value: {{ .Values.mqtt_pub_password }}
+        - name: REDIS_URL
+          value: "[{\"host\":\"redis-0.redis\",\"port\":6379},{\"host\":\"redis-1.redis\",\"port\":6379},{\"host\":\"redis-2.redis\",\"port\":6379},{\"host\":\"redis-3.redis\",\"port\":6379},{\"host\":\"redis-4.redis\",\"port\":6379},{\"host\":\"redis-5.redis\",\"port\":6379}]"
+        - name: MQTT_SUB_BROKER
+          value: {{ .Values.mqtt_sub_broker }}
+        - name: MQTT_SUB_USERNAME
+          value: {{ .Values.mqtt_sub_username }}
+        - name: MQTT_SUB_PASSWORD
+          value: {{ .Values.mqtt_sub_password }}
+        - name: MQTT_SUB_TOPIC
+          value: {{ .Values.mqtt_sub_topic }}
+        - name: MQTT_MONIT_TOPIC
+          value: {{ .Values.mqtt_monit_topic }}
+        - name: CENTRE_ID
+          value: {{ .Values.centre_id }}
+        - name: MSG_CHECK_OPTION
+          value: {{ .Values.msg_check_option }}
+        - name: TOPIC_CHECK_OPTION
+          value: {{ .Values.topic_check_option }}
+        - name: METADATA_CHECK_OPTION
+          value: {{ .Values.metadata_check_option }}
+        - name: GDC_URL
+          value: {{ .Values.gdc_url }}
+        - name: SCHEMA_URL
+          value: {{ .Values.schema_url }}
+      - name: leader-elector
+        image: fredrikjanssonse/leader-elector:0.6
+        args: ["--election={{ .Values.wis2node }}.lock", "--election-namespace={{ .Release.Namespace }}", "--http=0.0.0.0:4040"]
