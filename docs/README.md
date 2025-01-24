@@ -6,17 +6,17 @@ Deployment of a WIS2 stack and multiple WIS2NODEs on a K8S cluster
 ### Components
 - a 6-node Redis cluster (3 masters and 3 slaves) accessible via ClusterIP at addresses redis-{0..2}.redis:6379
 - a 2-node EMQX cluster accessible via ClusterIP at the address ws://emqx-headless:8083
-- a 2-node wis2node cluster accessible via Ingress at the address http://wis2node.{{ ingress.hostname }}:1880
+- a 2-node wis2node cluster accessible via Ingress at the address http://wis2node.< your_hostname >
 
 ### Deployment
 
 - Install cert-manager and emqx-operator following [this procedure](https://docs.emqx.com/en/emqx-operator/latest/getting-started/hello-emqx-operator.html)
 
 
-- Install wis2node using the following command:
+- Install wis2node using the following commands:
 ```
-helm repo add wis2node https://golfvert.github.io/helm-charts
-helm -n <namespace> --create-namespace upgrade --install wis2 wis2node/wis2node
+helm repo add wis2node https://moz411.github.io/wis2node
+helm -n wis2node --create-namespace upgrade --install wis2node wis2node/wis2node
 ```
 
 ## Administration
@@ -53,6 +53,3 @@ node-red-contrib-createrandom backend started.
 ...
 ```
 
-- The administration interface of the wis2node is available at https://<wis2node>.wis2.s1.kube-sidev.meteo.fr
-
- - The administration interface of the EMQX cluster is available at https://emqx-dashboard.wis2.s1.kube-sidev.meteo.fr
